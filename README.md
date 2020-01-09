@@ -4,6 +4,7 @@
 
 > LavaPod is currently in active developement. If you need more details, please contact `Matthieu#2050` or join one of the discord servers below.
 
+[**UniX's Website**](https://unix-corp.tech/) | [**HeroBot's discord server**](https://discord.gg/ehFCBs)
 
 This project aims to create an extended lavalink api that can runs on kubernetes.
 This made us use a microservices infrastructure.
@@ -25,5 +26,5 @@ The documentation for the differents components is available below.
 
 [LavaLink API v3](doc/lavalink_api_v3.md) \
 [LavaPod Extension v1](doc/lavapod_extension_v1.md) \
-[LavaPod Internals v1](doc/lavapod_extension_v1.md)
+[LavaPod Internals v1](doc/lavapod_internals_v1.md)
 

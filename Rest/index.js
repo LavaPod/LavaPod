@@ -1,64 +1,85 @@
 const express = require('express')
+const Config = require('./config')
 
-module.exports = class RestServer {
-    
+/**
+ * @typedef {Object} NodeInfo
+ * @property {String} hostname
+ * @property {number} corecount
+ */
+
+ /**
+ * Represents an http server instance
+ * @class
+ * @property {import('express')} server The http server ( express )
+ * @property {import('express').Router} router A router globally available.
+ * @property {import('./config')} config The server configuration
+ * 
+ * @property {number} errorsCount The count of errors.
+ * @property {NodeInfo} nodeInfo The node's informations
+ */
+class RestServer {
+    /**
+     * Constructs the server from the configuration
+     * @param {import('./config')} config The configuration applied to the server.
+     * @constructor
+     * @constructs RestServer
+     */
     constructor(config) {
 
-        this.rpc = new (require('./rpcClient'))(config.rpc)
-        this.http = express()
-        
-        var rawBodySaver = function (req, res, buf, encoding) {
-            if (buf && buf.length) {
-              req.rawBody = buf.toString(encoding || 'utf8');
-            }
+        this.errorsCount = 0
+
+        this.nodeInfo = {
+            hostname: require('os').hostname(),
+            corecount: require('os').cpus().length
         }
-        this.http
-            .use(express.raw({ verify: rawBodySaver, type: () => true }))
-        this.http.set('trust proxy')
-        this.http.get(['/decodetrack'], this.decodetrack.bind(this))
-        this.http.get(['/loadtracks'], this.loadTracks.bind(this))
-            
-        this.http.get(['/decodetracks'],this.decodeTracks.bind(this))
-        this.http.use((_,res,__) => {
-            
-			res.status(404).json({
-				error: { status: 404, message: require('http').STATUS_CODES[404] },
-            });
 
-        })
-        this.http.use((err, _, res, __) => {
-            console.log(err)
-            
-			res.status(err.status || 500).json({
-				error: { status: err.status || 500, message: err.message || require('http').STATUS_CODES[err.status || 500] },
-			});
-        });
+        // Store the server's configuration
+        this.config = config
+
+        // First we construct the http server        
+        this.server = express()
+            .use(require('morgan')(this.config.logFormat))
         
-        this.http.listen(config.port)
-        console.log(`Started the api server on ::${config.port}`)
-    }
+        this.server
+            .set('trust proxy')
+        
+        // Add the the error handlers
+        this.registerHandling()
+        // Add all the api handlers
+        this.registerHandlers()
 
-    decodeTracks(req,res,next) {
-        let q = JSON.parse(req.rawBody)
-        if(!q|| !q.length || q.length < 1) return next({status:400,message: 'To decode the tracks, you need to have at least 1 track.'}) 
-        this.rpc.decodeTracks(q).then((e) => {
-            res.contentType('json').send(e)
-        })
-        .catch((error) => {
-            next(error)
-        })
+        this.server
+            .listen(this.config.port)
+        console.info(`Server now listening to ::${this.config.port}`)
     }
-    loadTracks(req,res,next) {
-        console.log(req.query)
-        this.rpc.loadTracks(req.query.identifier).then((e) => {
-            res.contentType('json').send(e)
-        })
-        .catch((error) => {
-            next(error)
-        })
+    /**
+     * Load all the specified modules into the router.
+     * @returns {void}
+     * @private
+     */
+    registerHandlers() {
+        // Load all the different api's routers.
+        this.server
+            .use(new (require('./apis/lava'))(this))
+            .use(new (require('./apis/status'))(this))
+        if(this.config.extended) {
+            console.warn(`The server have the extended api enabled. This api is currently unstable and souldn't be available in production.`)
+            this.server
+                .use(new (require('./apis/extended'))(this))
+        }
+        console.info('All tha api are now loaded.')
     }
-    decodetrack(req,res,next) {
-        // Need to be implemented
+    /**
+     * Add all the error handling to the http server.
+     * @returns {void}
+     * @private
+     */
+    registerHandling() {
+        
     }
-
 }
+module.exports = RestServer
+new RestServer(Config.getConfigFromAnyObject({
+    port: 8000,
+    extended: false
+}))

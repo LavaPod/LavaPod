@@ -1,6 +1,6 @@
 const express = require('express')
 const Config = require('./config')
-
+const RpcClient = require('./backend/rpc')
 /**
  * @typedef {Object} NodeInfo
  * @property {String} hostname
@@ -13,7 +13,7 @@ const Config = require('./config')
  * @property {import('express')} server The http server ( express )
  * @property {import('express').Router} router A router globally available.
  * @property {import('./config')} config The server configuration
- * 
+ * @property {import('./backend/rpc')} 
  * @property {number} errorsCount The count of errors.
  * @property {NodeInfo} nodeInfo The node's informations
  */
@@ -27,11 +27,19 @@ class RestServer {
     constructor(config) {
 
         this.errorsCount = 0
-
+        let os = require('os')
+        let load = os.loadavg()
         this.nodeInfo = {
-            hostname: require('os').hostname(),
-            corecount: require('os').cpus().length
+            hostname: os.hostname(),
+            corecount: os.cpus().length,
+            processor: os.cpus()[0].model,
+            loadAvg: {
+                1: load[0],
+                5: load[1],
+                15: load[2]
+            }
         }
+        
 
         // Store the server's configuration
         this.config = config
@@ -47,7 +55,8 @@ class RestServer {
         this.registerHandling()
         // Add all the api handlers
         this.registerHandlers()
-
+        // Load rpc excange implementation
+        this.loadRpcClient()
         this.server
             .listen(this.config.port)
         console.info(`Server now listening to ::${this.config.port}`)
@@ -77,9 +86,18 @@ class RestServer {
     registerHandling() {
         
     }
+    /**
+     * Initialize the rpc client.
+     */
+    loadRpcClient() {
+        this.rpc = new RpcClient(this.config.rpc)
+    }
 }
 module.exports = RestServer
 new RestServer(Config.getConfigFromAnyObject({
     port: 8000,
-    extended: false
+    extended: false,
+    rpc: {
+        host: 'localhost'
+    }
 }))

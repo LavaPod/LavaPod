@@ -30,7 +30,8 @@ class Config {
         return new Config(
             process.env.LAVA_PORT,
             process.env.LAVA_EXTENDED,
-            process.env.LAVA_LOGFORMAT
+            process.env.LAVA_LOGFORMAT,
+            RpcConfig.getConfigFromEnvironment()
         )
     }
     /**

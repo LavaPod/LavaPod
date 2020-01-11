@@ -21,7 +21,6 @@ class LavaApi extends Router {
             .get(['/decodetrack'],LavaApi.decodeTrack.bind(this))
             .get(['/loadtracks'],LavaApi.loadTracks.bind(this))
             .get(['/decodetracks'],LavaApi.decodeTracks.bind(this))
-
         console.log('Lava API succesfully loaded.')
     }
     /**
@@ -32,10 +31,24 @@ class LavaApi extends Router {
      * @this {LavaApi}
      */
     static decodeTracks(request,response,next) {
-        // Handle this with the rpc callers.
-        response.json({
-            code: 500,
-            message: 'Not implemented'
+        let json
+        try {
+            json = JSON.parse(request.rawBody)
+        } catch (e) {
+            e.status = 400
+            e.message = 'Invalid json input.'
+            e.displayMessage = true
+            return next(e)
+        }
+        this.server.rpc.rpcCall('decodeTracks',{
+            descriptor: json
+        },(error,payload) => {
+            if(error) {
+                error.status = 500
+                return next(error)
+            }
+            response.contentType('json')
+            response.send(payload.toString())
         })
     }
     /**
@@ -46,8 +59,23 @@ class LavaApi extends Router {
      * @this {LavaApi}
      */
     static loadTracks(request,response,next) {
-        // Handle this with the rpc callers.
-        next()
+        if(!request.query.identifier) {
+            return next({
+                message: 'Missing identifier query',
+                status: 400,
+                displayMessage: true
+            })
+        }
+        this.server.rpc.rpcCall('loadTracks', {
+            identifier: request.query.identifier
+        },(err,payload) => {
+            if(err) {
+                err.status = 500
+                return next(err)
+            }
+            response.contentType('json')
+            response.send(payload.toString())
+        })
     }
     /**
      * Handle the decodeTrack request.
@@ -57,8 +85,18 @@ class LavaApi extends Router {
      * @this {LavaApi}
      */
     static decodeTrack(request,response,next) {
-        // Handle this with the rpc callers.
-        next()
+        console.log(request.rawBody)
+        this.server.rpc.rpcCall('decodeTrack', {
+            descriptor: request.rawBody
+        },(err,payload) => {
+            if(err) {
+                err.status = 500
+                err.displayMessage = true
+                return next(err)
+            }
+            response.contentType('json')
+            response.send(payload.toString())
+        })
     }
 }
 module.exports = LavaApi

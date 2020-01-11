@@ -15,10 +15,22 @@ class RpcConfig {
         this.host = host || 'localhost'
     }
     /**
-     * 
+     * @static
+     * @returns {RpcConfig}
+     * @param {Object} object The object to use
      */
     static getConfigFromAnyObject(object) {
         return new RpcConfig(object.host)
+    }
+    /**
+     * @static
+     * @returns {RpcConfig}
+     * 
+     */
+    static getConfigFromEnvironment() {
+        return new RpcConfig(
+            process.env.LAVA_RPC_HOST
+        )
     }
 }
 /**

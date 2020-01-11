@@ -1,5 +1,5 @@
 const express = require('express')
-const Config = require('./config')
+const { STATUS_CODES } = require('http')
 const RpcClient = require('./backend/rpc')
 /**
  * @typedef {Object} NodeInfo
@@ -46,15 +46,18 @@ class RestServer {
 
         // First we construct the http server        
         this.server = express()
+            .use(this.customElements.bind(this))
             .use(require('morgan')(this.config.logFormat))
+            .use(express.raw({ verify: this.rawBody, type: () => true }))
         
         this.server
             .set('trust proxy')
         
-        // Add the the error handlers
-        this.registerHandling()
+
         // Add all the api handlers
         this.registerHandlers()
+        // Add the the error handlers
+        this.registerHandling()
         // Load rpc excange implementation
         this.loadRpcClient()
         this.server
@@ -84,7 +87,18 @@ class RestServer {
      * @private
      */
     registerHandling() {
-        
+        this.server
+            .use((_,res) => {
+                res.status(404).json({
+                    error: { status: 404, message: STATUS_CODES[404] },
+                })
+            })
+            .use((err, _, res, __) => {
+                this.errorsCount++
+			    res.status(err.status || 500).json({
+                    error: { status: err.status || 500, message: err.displayMessage ? err.message : STATUS_CODES[err.status || 500] },
+			    })
+            })
     }
     /**
      * Initialize the rpc client.
@@ -92,12 +106,21 @@ class RestServer {
     loadRpcClient() {
         this.rpc = new RpcClient(this.config.rpc)
     }
+    rawBody(req, res, buf, encoding) {
+        if (buf && buf.length) {
+            req.rawBody = buf.toString(encoding || 'utf8');
+        }
+    }
+    /**
+     * 
+     * @param {import('express').response} res 
+     */
+    customElements(_,res,next) {
+        res
+            .header('X-Provider','UniX-Corp © 2019')
+            .header('X-Node',this.nodeInfo.hostname)
+            .header('X-Runtime','NodeJs Lavalink Implementation')
+        next()
+    }
 }
 module.exports = RestServer
-new RestServer(Config.getConfigFromAnyObject({
-    port: 8000,
-    extended: false,
-    rpc: {
-        host: 'localhost'
-    }
-}))

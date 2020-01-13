@@ -1,7 +1,6 @@
 kind: pipeline
 type: kubernetes
-name: default
-
+name: "Build the api"
 steps:
 - name: publish_rest
   image: plugins/docker

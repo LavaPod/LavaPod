@@ -13,4 +13,3 @@ steps:
       username: matthis974
       password:
         from_secret: DOCKER_PASSWORD
----

@@ -19,7 +19,7 @@ jobs:
     - name: "Runs the build of the rest api"
       working-directory: Rest
       run: |
-        echo $docker_password | docker login -u $docker_name --password-stdin
+        docker login -u $docker_name -p $docker_password
         docker build . -t matthis974/dockspace:lavarest-$GITHUB_SHA
         docker push matthis974/dockspace:lavarest-$GITHUB_SHA
           |

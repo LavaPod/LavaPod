@@ -1,0 +1,16 @@
+---
+kind: pipeline
+type: kubernetes
+name: default
+
+steps:
+- name: publish_rest
+  image: plugins/docker
+  settings:
+      target: Rest
+      repo: matthis974/lavapod
+      tags: 'lavarest'
+      username: matthis974
+      password:
+        from_secret: DOCKER_PASSWORD
+---

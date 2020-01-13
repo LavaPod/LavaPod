@@ -3,7 +3,7 @@ name: "Build the whole project."
 on: [push]
 
 jobs:
-  "Build the rest api":
+  rest_api_build:
     runs-on: ubuntu-latest
     env:
       docker_login: ${{ secrets.DockerLogin }}

@@ -1,0 +1,25 @@
+name: "Build the whole project."
+
+on: [push]
+
+jobs:
+  "Build the rest api":
+    runs-on: ubuntu-latest
+    env:
+      docker_login: ${{ secrets.DockerLogin }}
+      docker_name: ${{ secrets.DockerName }}
+    steps:
+    - name: "Get the code from GitHub"
+      uses: actions/checkout@v1
+    - name: "Add docker to the build environment"
+      uses: docker-practice/actions-setup-docker@0.0.1
+      with:
+        # Docker Channel
+        docker_channel: stable
+    - name: "Runs the build of the rest api"
+      working-directory: Rest
+      run: |
+        echo $docker_password | docker login -u $docker_name --password-stdin
+        docker build . -t matthis974/dockspace:lavarest-$GITHUB_SHA
+        docker push matthis974/dockspace:lavarest-$GITHUB_SHA
+          |

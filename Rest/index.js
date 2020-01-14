@@ -117,9 +117,9 @@ class RestServer {
      */
     customElements(_,res,next) {
         res
-            .header('X-Provider','UniX-Corp © 2019')
+            .header('X-Provider','UniX Technology Corporation / Matthieu © 2019')
             .header('X-Node',this.nodeInfo.hostname)
-            .header('X-Runtime','NodeJs Lavalink Implementation')
+            .header('X-Runtime','NodeJs LavaPod Rest')
         next()
     }
 }

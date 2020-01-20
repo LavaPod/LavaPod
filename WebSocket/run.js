@@ -1,5 +1,5 @@
 const Config = require('./config')
-const RestServer = require('./index')
+const WebSocket = require('./index')
 const { RpcConfig } = require('./backend/rpc')
 let run = 'dev'
 let config
@@ -9,7 +9,7 @@ if (process.argv[2]) {
 console.log(run)
 switch (run) {
   case 'dev':
-    config = new Config(8000, true, 'dev', new RpcConfig('localhost'))
+    config = new Config(8000, new RpcConfig('localhost'), true)
     break
   case 'docker':
     config = Config.getConfigFromEnvironment()
@@ -17,4 +17,4 @@ switch (run) {
   default:
     break
 }
-RestServer(config)
+WebSocket(config)

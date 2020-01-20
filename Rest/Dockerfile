@@ -4,7 +4,7 @@ FROM node:13
 MAINTAINER Matthieu <matthieu.p@unix-corp.tech>
 LABEL maintainer Matthieu <matthieu.p@unix-corp.tech>
 
-
+ENV VERSION=0.2
 WORKDIR /app
 COPY package.json .
 RUN yarn

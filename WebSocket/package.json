@@ -1,11 +1,15 @@
 {
+  "name": "lavawebsocket",
+  "version": "0.0.1",
+  "description": "A websocket server dedicated to lavalink",
+  "main": "index.js",
+  "author": "Matthieu & UniX",
+  "license": "MIT",
   "dependencies": {
-    "amqp": "^0.2.7",
-    "amqplib": "^0.5.5",
-    "express": "^4.17.1",
-    "morgan": "^1.9.1",
+    "node-fetch": "^2.6.0",
     "rabbitmq": "^0.0.2",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "ws": "^7.2.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.16.0",
@@ -15,6 +19,7 @@
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint-plugin-standard": "^4.0.1",
+    "fs": "^0.0.1-security"
   }
 }

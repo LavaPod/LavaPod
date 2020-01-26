@@ -42,3 +42,24 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/WebSocket/Dockerfile'
         tags: |
           $(tag)
+- stage: Build_LAvaPodler
+  displayName: Build image
+  jobs:  
+  - job: Build
+    displayName: Generate gradle stuff
+    pool:
+      vmImage: 'gradle'
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: cd LavaPodler && gradle :dockerCreateDockerfile
+    - task: Docker@2
+      displayName: Build an image
+      inputs:
+        command: build
+        dockerfile: '$(Build.SourcesDirectory)/LavaPodler/Dockerfile'
+        tags: |
+          $(tag)
+      env:
+        MySecret: $(Foo)

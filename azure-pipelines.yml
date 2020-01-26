@@ -64,7 +64,6 @@ stages:
       inputs:
         command: 'build'
         Dockerfile: 'LavaPodler/build/docker/Dockerfile'
-        buildContext: 'LavaPodler'
         tags: '$(tag)'
       env:
         MySecret: $(Foo)

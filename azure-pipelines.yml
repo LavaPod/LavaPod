@@ -52,7 +52,7 @@ stages:
     steps:
     - task: Gradle@2
       inputs:
-        gradleWrapperFile: 'gradlew'
+        gradleWrapperFile: 'LavaPodler/gradlew'
         workingDirectory: 'LavaPodler'
         tasks: 'dockerCreateDockerfile'
         publishJUnitResults: true

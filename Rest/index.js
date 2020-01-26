@@ -14,7 +14,6 @@ const RpcClient = require('./backend/rpc')
  * @property {import('express').Router} router A router globally available.
  * @property {import('./config')} config The server configuration
  * @property {import('./backend/rpc')}
- * @property {number} errorsCount The count of errors.
  * @property {NodeInfo} nodeInfo The node's informations
  */
 class RestServer {
@@ -25,20 +24,20 @@ class RestServer {
      * @constructs RestServer
      */
   constructor (config) {
-    this.errorsCount = 0
     const os = require('os')
-    const load = os.loadavg()
+
     this.nodeInfo = () => {
+      const load = os.loadavg()
       return {
         hostname: os.hostname(),
         corecount: os.cpus().length,
         processor: os.cpus()[0].model,
         loadAvg: {
-          1: load[0],
-          5: load[1],
-          15: load[2]
+          1: load[0] || undefined,
+          5: load[1] || undefined,
+          15: load[2] || undefined
         },
-        version: process.env.VERSION || 'Unnoficial'
+        version: process.env.VERSION || 'Unnoficial / Developement version'
       }
     }
 

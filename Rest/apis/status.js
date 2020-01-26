@@ -33,7 +33,6 @@ class StatusApi extends Router {
      */
   static getStatus (request, response) {
     response.json({
-      errorsCount: this.server.errorsCount,
       nodeInfo: this.server.nodeInfo()
     })
   }

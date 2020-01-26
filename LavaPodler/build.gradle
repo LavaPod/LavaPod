@@ -34,7 +34,10 @@ docker {
     javaApplication {
         baseImage = 'openjdk:11-jre-slim'
         maintainer = 'Matthieu P "matthieu.p@unix-corp.tech"'
-        images = ['matthis974/dockspace:lavapodler-v5']
+        images = ['matthis974/dockspace:lavapodler-v5.1']
         jvmArgs = ['-Xmx1G', '-Djdk.tls.client.protocols=TLSv1.1,TLSv1.2']
     }
+}
+dockerCreateDockerfile {
+    environmentVariable 'DOCKER', 'true'
 }

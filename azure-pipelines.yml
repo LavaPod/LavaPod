@@ -60,12 +60,9 @@ stages:
         javaHomeOption: 'JDKVersion'
         sonarQubeRunAnalysis: false
     - task: Docker@2
-      displayName: Build an image
       inputs:
         containerRegistry: 'Matthieu''s docker'
-        repository: 'matthis974/lavapod'
+        repository: 'lavapod/lavapodler'
         command: 'buildAndPush'
         Dockerfile: 'LavaPodler/build/docker/Dockerfile'
-        tags: '$(tag)'
-      env:
-        MySecret: $(Foo)
+        tags: '$(Build.SourceBranchName)'

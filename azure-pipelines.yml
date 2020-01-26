@@ -52,7 +52,15 @@ stages:
     steps:
     - task: Gradle@2
       inputs:
+        gradleWrapperFile: 'gradlew'
+        workingDirectory: 'LavaPodler'
         tasks: 'dockerCreateDockerfile'
+        publishJUnitResults: true
+        testResultsFiles: '**/TEST-*.xml'
+        javaHomeOption: 'JDKVersion'
+        sonarQubeRunAnalysis: true
+        sqGradlePluginVersionChoice: 'specify'
+        sonarQubeGradlePluginVersion: '2.6.1'
     - task: Docker@2
       displayName: Build an image
       inputs:

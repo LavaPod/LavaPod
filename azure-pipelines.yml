@@ -26,7 +26,7 @@ stages:
         repository: 'lavapod/rest'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
-        tags: '$(Build.SourceBranchName)''
+        tags: '$(Build.SourceBranchName)'
 #- stage: Build_WebSocket
 #  displayName: Build image
 #  jobs:  

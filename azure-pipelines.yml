@@ -21,12 +21,12 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
-      displayName: Build an image
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Rest/Dockerfile'
-        tags: |
-          $(tag)
+        containerRegistry: 'Matthieu''s docker'
+        repository: 'lavapod/rest'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: '$(Build.SourceBranchName)''
 #- stage: Build_WebSocket
 #  displayName: Build image
 #  jobs:  

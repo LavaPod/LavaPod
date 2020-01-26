@@ -62,7 +62,9 @@ stages:
     - task: Docker@2
       displayName: Build an image
       inputs:
-        command: 'build'
+        containerRegistry: 'Matthieu''s docker'
+        repository: 'matthis974/lavapod'
+        command: 'buildAndPush'
         Dockerfile: 'LavaPodler/build/docker/Dockerfile'
         tags: '$(tag)'
       env:

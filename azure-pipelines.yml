@@ -58,9 +58,7 @@ stages:
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
         javaHomeOption: 'JDKVersion'
-        sonarQubeRunAnalysis: true
-        sqGradlePluginVersionChoice: 'specify'
-        sonarQubeGradlePluginVersion: '2.6.1'
+        sonarQubeRunAnalysis: false
     - task: Docker@2
       displayName: Build an image
       inputs:

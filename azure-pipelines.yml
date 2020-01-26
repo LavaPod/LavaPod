@@ -54,7 +54,7 @@ stages:
       inputs:
         gradleWrapperFile: 'LavaPodler/gradlew'
         workingDirectory: 'LavaPodler'
-        tasks: 'dockerCreateDockerfile'
+        tasks: 'wrapper dockerCreateDockerfile'
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
         javaHomeOption: 'JDKVersion'

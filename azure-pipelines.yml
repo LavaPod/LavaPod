@@ -21,12 +21,12 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
-      displayName: Build an image
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Rest/Dockerfile'
-        tags: |
-          $(tag)
+        containerRegistry: 'Matthieu''s docker'
+        repository: 'lavapod/rest'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: '$(Build.SourceBranchName)'
 #- stage: Build_WebSocket
 #  displayName: Build image
 #  jobs:  
@@ -58,15 +58,11 @@ stages:
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
         javaHomeOption: 'JDKVersion'
-        sonarQubeRunAnalysis: true
-        sqGradlePluginVersionChoice: 'specify'
-        sonarQubeGradlePluginVersion: '2.6.1'
+        sonarQubeRunAnalysis: false
     - task: Docker@2
-      displayName: Build an image
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/LavaPodler/Dockerfile'
-        tags: |
-          $(tag)
-      env:
-        MySecret: $(Foo)
+        containerRegistry: 'Matthieu''s docker'
+        repository: 'lavapod/lavapodler'
+        command: 'buildAndPush'
+        Dockerfile: 'LavaPodler/build/docker/Dockerfile'
+        tags: '$(Build.SourceBranchName)'

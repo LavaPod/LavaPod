@@ -24,7 +24,7 @@ public class Nats implements ConnectionListener {
     public Nats(Config config, Main main) throws IOException, InterruptedException {
         this.main = main;
         this.connection = io.nats.client.Nats.connect(new Options.Builder()
-                .server("nats://localhost")
+                .server("nats://localhost:4222")
                 .connectionListener(this)
                 .build());
 

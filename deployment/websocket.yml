@@ -25,6 +25,10 @@ spec:
         env:
         - name: NATS
           value:  "lavapod-nats:4222"
+        - name: REDIS
+          value: "rfs-lavapod.lavapod"
+        - name: REDIS_PORT
+          value: "26379"
         ports:
           - containerPort: 8000
         resources:

@@ -11,7 +11,11 @@ import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceMan
 import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import fr.unix.lavapod.lavapodler.Main;
+import fr.unix.lavapod.lavapodler.Nats;
 import fr.unix.lavapod.lavapodler.audio.loader.AudioLoader;
+import fr.unix.lavapod.lavapodler.audio.player.Metadata;
+import fr.unix.lavapod.lavapodler.audio.player.MetadataBuilder;
+import fr.unix.lavapod.lavapodler.audio.player.Player;
 import net.dv8tion.jda.api.audio.factory.IAudioSendFactory;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -27,12 +31,11 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class PlayersManager {
     private static final Logger logger = LoggerFactory.getLogger(PlayersManager.class);
-    private final Map<String,Player> contextMap = new HashMap<>();
+    private final Map<String, Player> contextMap = new HashMap<>();
     private final AudioPlayerManager playerManager = BuildPlayerManager();
     private final Main main;
     private final MagmaApi magma;
-    private Map<Integer,IAudioSendFactory> factory = new HashMap<>();
-    private Map<String,Integer> facD = new HashMap<>();
+    private final IAudioSendFactory factory = InitFactory();
 
     /**
      * Initialize a send factory
@@ -40,7 +43,7 @@ public class PlayersManager {
      */
     public IAudioSendFactory InitFactory() {
         logger.info("Creating a factory.");
-        return AsyncPacketProviderFactory.adapt(new NativeAudioSendFactory(50));
+        return AsyncPacketProviderFactory.adapt(new NativeAudioSendFactory(500));
     }
 
     /**
@@ -58,24 +61,6 @@ public class PlayersManager {
      */
     public MagmaApi getMagmaApi() {
         return magma;
-    }
-
-    /**
-     * This is used as factory provider for lavapod.
-     * TODO Need to made the factory provider select a specific factory instance for each guild/userid player.
-     * @param member
-     * @return
-     */
-    private IAudioSendFactory magmaApiProvider(Member member) {
-        return factory.computeIfAbsent(ComputeFactoryFromMember(member),(e) -> InitFactory());
-    }
-
-    private Integer ComputeFactoryFromMember(Member m) {
-        return facD.computeIfAbsent(m.getGuildId()+m.getUserId(),(member) -> new Random().nextInt(10));
-    }
-
-    public Main getMain() {
-        return main;
     }
 
     private static AudioPlayerManager BuildPlayerManager() {
@@ -102,7 +87,7 @@ public class PlayersManager {
     }
 
     public PlayersManager(Main main) {
-        this.magma = MagmaFactory.of(this::magmaApiProvider);
+        this.magma = MagmaFactory.of((e) -> this.factory);
         this.main = main;
         executor = Executors.newScheduledThreadPool(1);
         getMagmaApi().getEventStream().subscribe(this::event);
@@ -111,22 +96,22 @@ public class PlayersManager {
         System.out.println(e.getClass().getName());
     }
 
-
-    public Player getContextFromGuild(String guild) {
-        return this.createContext(guild,new JSONObject());
+    public Player getContextInit(String guild, String user, String websocket) {
+        return contextMap.computeIfAbsent(guild, (e) -> {
+            logger.info("Creating a context.");
+            return new Player(playerManager.createPlayer(),executor,new MetadataBuilder().setGuild(guild).setWebSocket(websocket).setUser(user).build(), this);
+        });
     }
 
-
-    public Player createContext(String guild, JSONObject data) {
-        return contextMap.computeIfAbsent(guild, this::createContextReal);
-    }
-
-    private Player createContextReal(String s) {
-        logger.info("Creating a context.");
-        return new Player(s,this.playerManager,this.executor,this,"","");
+    public Player getContext(String guild) {
+        return contextMap.getOrDefault(guild, null);
     }
 
     public AudioPlayerManager getPlayerManager() {
         return playerManager;
+    }
+
+    public Nats getNats() {
+        return this.main.getNats();
     }
 }

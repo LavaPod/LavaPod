@@ -1,4 +1,4 @@
-const RpcConfig = require('./backend/rpc').RpcConfig
+
 /**
  * A RestServer configuration instance
  * @class
@@ -14,7 +14,7 @@ class Config {
      */
   constructor (port, rpc) {
     this.port = port || 8000
-    this.rpc = rpc || new RpcConfig()
+
   }
 
   /**
@@ -25,8 +25,7 @@ class Config {
   static getConfigFromEnvironment () {
     return new Config(
       process.env.LAVA_PORT,
-      process.env.LAVA_LOGFORMAT,
-      RpcConfig.getConfigFromEnvironment()
+      process.env.LAVA_LOGFORMAT
     )
   }
 
@@ -38,7 +37,7 @@ class Config {
      *
      */
   static getConfigFromAnyObject (object) {
-    return new Config(object.port, object.logFormat, RpcConfig.getConfigFromAnyObject(object.rpc))
+    return new Config(object.port, object.logFormat)
   }
 
   /**

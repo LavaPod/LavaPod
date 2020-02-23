@@ -1,5 +1,6 @@
 const { createServer } = require('http')
 const { Server } = require('ws')
+const Nats = require('./backend/nats')
 const { Handler } = require('./handler/handler.js')
 const os = require('os')
 /**
@@ -26,6 +27,7 @@ class RestServer {
   constructor (config) {
     // Store the server's configuration
     this.config = config
+    this.nats = new Nats()
     /**
          * Used for the status endpoint.
          */

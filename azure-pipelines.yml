@@ -12,11 +12,11 @@ variables:
   tag: '$(Build.BuildId)'
 
 stages:
-- stage: Build_Rest
-  displayName: Build image
+- stage: LavaPod_Rest
+  displayName: Publish the LavaPod Rest Image
   jobs:  
   - job: Build
-    displayName: Build
+    displayName: Docker build
     pool:
       vmImage: 'ubuntu-latest'
     steps:
@@ -25,28 +25,30 @@ stages:
         containerRegistry: 'Matthieu''s docker'
         repository: 'lavapod/rest'
         command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: 'Dockerfile'
+        buildContext: 'Rest'
         tags: '$(Build.SourceBranchName)'
 - stage: Build_Websocket
-  displayName: Build image
+  displayName: Publish the LavaPod Websocket Image
   jobs:  
   - job: Build
-    displayName: Build
+    displayName: Docker build
     pool:
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
       inputs:
         containerRegistry: 'Matthieu''s docker'
-        repository: 'lavapod/WebSocketTS'
+        repository: 'lavapod/websocket'
         command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: 'Dockerfile'
+        buildContext: 'WebSocketTS'
         tags: '$(Build.SourceBranchName)'
-- stage: Build_LAvaPodler
-  displayName: Build image
+- stage: Build_LavaPodler
+  displayName: Publish LavaPodler
   jobs:  
   - job: Build
-    displayName: Generate gradle stuff
+    displayName: Generate Gradle Dockerfile
     pool:
       vmImage: 'ubuntu-latest'
     steps:

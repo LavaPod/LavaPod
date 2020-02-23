@@ -25,7 +25,7 @@ stages:
         containerRegistry: 'Matthieu''s docker'
         repository: 'lavapod/rest'
         command: 'buildAndPush'
-        Dockerfile: 'Dockerfile'
+        Dockerfile: 'Rest/Dockerfile'
         buildContext: 'Rest'
         tags: '$(Build.SourceBranchName)'
 - stage: Build_Websocket
@@ -41,7 +41,7 @@ stages:
         containerRegistry: 'Matthieu''s docker'
         repository: 'lavapod/websocket'
         command: 'buildAndPush'
-        Dockerfile: 'Dockerfile'
+        Dockerfile: 'WebSocketTS/Dockerfile'
         buildContext: 'WebSocketTS'
         tags: '$(Build.SourceBranchName)'
 - stage: Build_LavaPodler

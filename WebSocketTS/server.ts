@@ -17,7 +17,7 @@ export default class WebSocketServer {
 
         this.logger = new Logger()
 
-        this.nats = connect('nats://localhost')
+        this.nats = connect(`nats://${process.env.NATS || 'localhost'}`)
         this.redis = new Redis()
 
         this.inbox = this.nats.createInbox()
@@ -238,6 +238,5 @@ export default class WebSocketServer {
         this.http.listen(8000)
         this.logger.log('Server now listening to ::8000')
         this.nats.subscribe(this.inbox,this.handleInbox.bind(this))
-        
     }
 } 

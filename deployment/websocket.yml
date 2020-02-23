@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lavawebs
+  labels:
+    name: lavawebs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: lavawebs
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 2
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: lavawebs
+    spec:
+      containers:
+      - image:  lavapod/websocket:master
+        name:  lavawebs
+        env:
+        - name: NATS
+          value:  "lavapod-nats"
+        ports:
+          - containerPort: 8000
+        resources:
+          requests:
+            cpu: "1m"
+            memory: "20M"
+          limits:
+            cpu: "1m"
+            memory: "50M"
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: regcred
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: lavawebs
+spec:
+  type: ClusterIP
+  selector:
+    app: lavawebs
+  ports:
+    - port: 8000
+      targetPort: 8000
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: lavawebs
+  annotations:
+    # use the shared ingress-nginx
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: drone.matthieu-dev.xyz
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: lavawebs
+          servicePort: 8000

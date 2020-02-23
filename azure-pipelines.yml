@@ -27,20 +27,21 @@ stages:
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: '$(Build.SourceBranchName)'
+
 - stage: Build_Websocket
-  displayName: Build image
+  displayName: Build the websocket's docker image.
   jobs:  
   - job: Build
-    displayName: Build
+    displayName: Build the docker image.
     pool:
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
       inputs:
         containerRegistry: 'Matthieu''s docker'
-        repository: 'lavapod/WebSocketTS'
+        repository: 'lavapod/websocket'
         command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: '/Dockerfile'
         tags: '$(Build.SourceBranchName)'
 - stage: Build_LAvaPodler
   displayName: Build image

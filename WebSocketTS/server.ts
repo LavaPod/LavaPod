@@ -18,11 +18,9 @@ export default class WebSocketServer {
         this.logger = new Logger()
 
         this.nats = connect(`nats://${process.env.NATS || 'localhost'}`)
-        this.redis = new Redis()
+        this.redis = new Redis(parseInt(process.env.REDIS_PORT),process.env.REDIS)
 
         this.inbox = this.nats.createInbox()
-        
-
 
         this.websocket = new Server({
             noServer: true

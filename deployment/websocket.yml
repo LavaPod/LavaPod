@@ -24,7 +24,7 @@ spec:
         name:  lavawebs
         env:
         - name: NATS
-          value:  "lavapod-nats"
+          value:  "lavapod-nats:4222"
         ports:
           - containerPort: 8000
         resources:
@@ -34,9 +34,9 @@ spec:
           limits:
             cpu: "1m"
             memory: "50M"
+        imagePullPolicy: Always
       restartPolicy: Always
-      imagePullSecrets:
-        - name: regcred
+      
 ---
 kind: Service
 apiVersion: v1
@@ -59,7 +59,7 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-  - host: drone.matthieu-dev.xyz
+  - host: lavapod.matthieu-dev.xyz
     http:
       paths:
       - path: /

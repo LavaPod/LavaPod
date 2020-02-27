@@ -17,11 +17,8 @@ export default class WebSocketServer {
 
         this.logger = new Logger()
 
-        this.nats = connect(`nats://${process.env.NATS || 'localhost'}`)
-        this.redis = new Redis({
-            sentinels: [ { host: 'rfs-lavapod.lavapod', port: 26379 } ],
-            name: 'mymaster'
-        })
+        this.nats = connect(process.env.NATS || 'nats://localhost')
+        this.redis = new Redis(parseInt(process.env.REDIS_PORT), process.env.REDIS_HOST)
 
         this.inbox = this.nats.createInbox()
 

@@ -4,3 +4,6 @@
 [submodule "RestServer"]
 	path = RestServer
 	url = https://github.com/LavaPod/RestServer
+[submodule "LavaPodler"]
+	path = LavaPodler
+	url = https://github.com/LavaPod/LavaPodler

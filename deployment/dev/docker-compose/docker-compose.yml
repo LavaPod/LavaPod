@@ -28,8 +28,6 @@ services:
     environment: 
       - NATS=nats://lavapod:lavapod@nats:4222
 
-#
-
   websocket:
     image: 'lavapod/websocket:master'
     container_name: 'websocket'
@@ -46,3 +44,5 @@ services:
       - NATS=nats://lavapod:lavapod@nats:4222
       - REDIS_PORT=6379
       - REDIS_HOST=redis
+
+      ## Rest needed.

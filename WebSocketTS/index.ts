@@ -1,3 +1,3 @@
-import WebSocketServer from './server';
+import WebSocketServer from './server/server';
 
 new WebSocketServer().start()

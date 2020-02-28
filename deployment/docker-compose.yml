@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+
+  redis:
+    image: 'redis'
+    ports: 
+      - 6379
+    container_name: 'redis'
+    restart: 'always'
+
+  nats:
+    image: 'nats'
+    container_name: 'nats'
+    restart: 'always'
+    ports: 
+      - 4222
+    command: --user lavapod --pass lavapod
+
+  lavapodler:
+    image: 'lavapod/lavapodler:master'
+    container_name: 'lavapod'
+    restart: 'always'
+    depends_on: 
+      - 'nats'
+    links: 
+      - 'nats'
+    environment: 
+      - NATS=nats://lavapod:lavapod@nats:4222
+
+#
+
+  websocket:
+    image: 'lavapod/websocket:master'
+    container_name: 'websocket'
+    restart: 'always'
+    ports:
+      - 8000:8000
+    depends_on: 
+      - 'nats'
+    links: 
+      - 'nats'
+      - 'redis'
+      - 'lavapodler'
+    environment: 
+      - NATS=nats://lavapod:lavapod@nats:4222
+      - REDIS_PORT=6379
+      - REDIS_HOST=redis

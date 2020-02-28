@@ -1,0 +1,6 @@
+[submodule "WebSocketServer"]
+	path = WebSocketServer
+	url = https://github.com/LavaPod/WebSocketServer
+[submodule "RestServer"]
+	path = RestServer
+	url = https://github.com/LavaPod/RestServer

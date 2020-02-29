@@ -30,9 +30,5 @@ spec:
         imagePullPolicy: "Always"
         name: websocket
         ports:
-        - containerPort: 8000
-        resources:
-          limits:
-            memory: 20m
-            cpu: 50m
+        - containerPort: 8081
       restartPolicy: Always

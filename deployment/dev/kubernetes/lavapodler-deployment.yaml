@@ -26,8 +26,4 @@ spec:
         image: lavapod/lavapodler:master
         imagePullPolicy: "Always"
         name: lavapod
-        resources:
-          limits:
-            memory: 70m
-            cpu: 100m
       restartPolicy: Always

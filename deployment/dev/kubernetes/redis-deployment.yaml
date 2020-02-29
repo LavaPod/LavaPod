@@ -2,26 +2,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: ./kompose convert
-    kompose.version: 1.21.0 (992df58d8)
-  creationTimestamp: null
+     lavapod-component: redis
   labels:
-    io.kompose.service: redis
+    app: redis
   name: redis
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: redis
-  strategy: {}
+      app: redis
   template:
     metadata:
       annotations:
-        kompose.cmd: ./kompose convert
-        kompose.version: 1.21.0 (992df58d8)
-      creationTimestamp: null
+         lavapod-component: redis
       labels:
-        io.kompose.service: redis
+        app: redis
     spec:
       containers:
       - image: redis
@@ -29,8 +24,8 @@ spec:
         name: redis
         ports:
         - containerPort: 6379
-        resources: {}
+        resources:
+          limits:
+            memory: 100m
+            cpu: 100m
       restartPolicy: Always
-      serviceAccountName: ""
-      volumes: null
-status: {}

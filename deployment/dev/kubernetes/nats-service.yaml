@@ -2,11 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    kompose.cmd: ./kompose convert
-    kompose.version: 1.21.0 (992df58d8)
-  creationTimestamp: null
+    lavapod-component: nats
   labels:
-    io.kompose.service: nats
+    app: nats
   name: nats
 spec:
   ports:
@@ -14,6 +12,4 @@ spec:
     port: 4222
     targetPort: 4222
   selector:
-    io.kompose.service: nats
-status:
-  loadBalancer: {}
+    app: nats

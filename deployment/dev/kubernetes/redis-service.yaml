@@ -2,11 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    kompose.cmd: ./kompose convert
-    kompose.version: 1.21.0 (992df58d8)
-  creationTimestamp: null
+    lavapod-component: redis
   labels:
-    io.kompose.service: redis
+    app: redis
   name: redis
 spec:
   ports:
@@ -14,6 +12,4 @@ spec:
     port: 6379
     targetPort: 6379
   selector:
-    io.kompose.service: redis
-status:
-  loadBalancer: {}
+    app: redis

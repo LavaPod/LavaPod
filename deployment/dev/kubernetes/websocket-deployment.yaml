@@ -2,26 +2,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: ./kompose convert
-    kompose.version: 1.21.0 (992df58d8)
-  creationTimestamp: null
+    lavapod-component: websocket
   labels:
-    io.kompose.service: websocket
+    app: websocket
   name: websocket
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      io.kompose.service: websocket
-  strategy: {}
+      app: websocket
   template:
     metadata:
       annotations:
-        kompose.cmd: ./kompose convert
-        kompose.version: 1.21.0 (992df58d8)
-      creationTimestamp: null
+        lavapod-component: websocket
       labels:
-        io.kompose.service: websocket
+        app: websocket
     spec:
       containers:
       - env:
@@ -36,8 +31,8 @@ spec:
         name: websocket
         ports:
         - containerPort: 8000
-        resources: {}
+        resources:
+          limits:
+            memory: 20m
+            cpu: 50m
       restartPolicy: Always
-      serviceAccountName: ""
-      volumes: null
-status: {}

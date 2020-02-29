@@ -2,26 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: ./kompose convert
-    kompose.version: 1.21.0 (992df58d8)
-  creationTimestamp: null
+    lavapod-component: lavapodler
   labels:
-    io.kompose.service: lavapodler
+    app: lavapodler
   name: lavapodler
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: lavapodler
+      app: lavapodler
   strategy: {}
   template:
     metadata:
       annotations:
-        kompose.cmd: ./kompose convert
-        kompose.version: 1.21.0 (992df58d8)
-      creationTimestamp: null
+        lavapod-component: lavapodler
       labels:
-        io.kompose.service: lavapodler
+        app: lavapodler
     spec:
       containers:
       - env:
@@ -30,8 +26,8 @@ spec:
         image: lavapod/lavapodler:master
         imagePullPolicy: "Always"
         name: lavapod
-        resources: {}
+        resources:
+          limits:
+            memory: 70m
+            cpu: 100m
       restartPolicy: Always
-      serviceAccountName: ""
-      volumes: null
-status: {}

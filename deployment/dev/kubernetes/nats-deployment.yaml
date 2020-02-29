@@ -2,26 +2,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: ./kompose convert
-    kompose.version: 1.21.0 (992df58d8)
-  creationTimestamp: null
+    lavapod-component: nats
   labels:
-    io.kompose.service: nats
+    app: nats
   name: nats
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: nats
-  strategy: {}
+      app: nats
   template:
     metadata:
       annotations:
-        kompose.cmd: ./kompose convert
-        kompose.version: 1.21.0 (992df58d8)
-      creationTimestamp: null
+        lavapod-component: nats
       labels:
-        io.kompose.service: nats
+        app: nats
     spec:
       containers:
       - args:
@@ -34,8 +29,8 @@ spec:
         name: nats
         ports:
         - containerPort: 4222
-        resources: {}
+        resources:
+          limits:
+            cpu: 10m
+            memory: 100m
       restartPolicy: Always
-      serviceAccountName: ""
-      volumes: null
-status: {}
